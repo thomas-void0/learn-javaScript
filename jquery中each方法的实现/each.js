@@ -70,23 +70,23 @@ function each1(obj,callback){
     return obj;
 }
 
-each1(testArr,(i,value)=>{
-    console.log(`i==${i} value==${value}`);
-    /**
-     * i==0 value==1     
-     * i==1 value==2     
-     * i==2 value==3
-     */
-})
+// each1(testArr,(i,value)=>{
+//     console.log(`i==${i} value==${value}`);
+//     /**
+//      * i==0 value==1     
+//      * i==1 value==2     
+//      * i==2 value==3
+//      */
+// })
 
-each1(testObj,(key,value)=>{
-    console.log(`key==${key} value==${value}`);
-    /**
-     * key==0 value==name
-     * key==1 value==age 
-     * key==2 value==se
-     */
-})
+// each1(testObj,(key,value)=>{
+//     console.log(`key==${key} value==${value}`);
+//     /**
+//      * key==0 value==name
+//      * key==1 value==age 
+//      * key==2 value==se
+//      */
+// })
 
 /**
  * 第二版本，实现返回false就中断
@@ -112,3 +112,23 @@ function each2(obj,callback){
     }
 }
 
+each2(testArr,(i,value)=>{
+    if(i > 1){
+        return false
+    }
+    console.log(`i==${i} value==${value}`);
+    /**
+     * i==0 value==1     
+     * i==1 value==2
+     */
+})
+
+each2(testObj,(key,value)=>{
+    if(key === 1){
+        return false;
+    }
+    console.log(`key==${key} value==${value}`);
+    /**
+     * key==0 value==name
+     */
+})
