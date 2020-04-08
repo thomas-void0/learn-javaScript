@@ -42,12 +42,15 @@ function isArrayLike(obj){
 // 第一版本
 function each(obj,callback){
     var length,i=0;
+
+    //如果是数组或者伪数组，就使用for循环
     if(isArrayLike(obj)){
         length = obj.length;
         for(;i<length;i++){
             callback(i,obj[i]);
         }
     }else{
+        //如果是对象，就使用for in
         for(i in obj){
             callback(i,obj[i]);
         }
