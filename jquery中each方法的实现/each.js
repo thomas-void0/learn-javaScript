@@ -112,23 +112,66 @@ function each2(obj,callback){
     }
 }
 
-each2(testArr,(i,value)=>{
-    if(i > 1){
-        return false
+// each2(testArr,(i,value)=>{
+//     if(i > 1){
+//         return false
+//     }
+//     console.log(`i==${i} value==${value}`);
+//     /**
+//      * i==0 value==1     
+//      * i==1 value==2
+//      */
+// })
+
+// each2(testObj,(key,value)=>{
+//     if(key === 1){
+//         return false;
+//     }
+//     console.log(`key==${key} value==${value}`);
+//     /**
+//      * key==0 value==name
+//      */
+// })
+
+/**
+ * 第三版本，绑定遍历项的this指向
+ * @param {Object/Array/} obj 
+ * @param {Function} callback 
+ */
+function each3(obj,callback){
+    let length,i=0;
+
+    if(isArrayLike(obj)){
+        length = obj.length;
+        for(;i<length;i++){
+            //callback函数中的this指向当前遍历的元素
+            if(callback.call(obj[i],i,obj[i]) === false){
+                break;
+            }        
+        }
+    }else{
+        for(i in obj){
+            if(callback.call(obj[i],i,obj[i]) === false){
+                break;
+            }
+        }
     }
-    console.log(`i==${i} value==${value}`);
+}
+
+each3(testArr,function(i,value){
+    console.log(`this==${this} i==${i} value==${value}`);
     /**
-     * i==0 value==1     
-     * i==1 value==2
+     * this==1 i==0 value==1
+     * this==2 i==1 value==2
+     * this==3 i==2 value==3
      */
 })
 
-each2(testObj,(key,value)=>{
-    if(key === 1){
-        return false;
-    }
-    console.log(`key==${key} value==${value}`);
+each3(testObj,function(key,value){
+    console.log(`this==${this} key==${key} value==${value}`);
     /**
-     * key==0 value==name
+     * this==name key==0 value==name
+     * this==age key==1 value==age  
+     * this==sex key==2 value==sex
      */
 })
