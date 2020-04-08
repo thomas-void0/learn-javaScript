@@ -39,9 +39,20 @@ function isArrayLike(obj){
     return typeRes === 'array' || length === 0 || 
         typeof length === "number" && length > 0 && (length - 1) in obj;
 }
-// 第一版本
-function each(obj,callback){
-    var length,i=0;
+
+// ===================================================================================================
+
+//测试数据
+const testObj = {0:"name",1:"age",2:"sex",length:3};
+const testArr = [1,2,3];
+
+/**
+ * 第一版本，不含中断的写法
+ * @param {Object/Array/} obj 
+ * @param {Function} callback 
+ */
+function each1(obj,callback){
+    let length,i=0;
 
     //如果是数组或者伪数组，就使用for循环
     if(isArrayLike(obj)){
@@ -59,4 +70,45 @@ function each(obj,callback){
     return obj;
 }
 
+each1(testArr,(i,value)=>{
+    console.log(`i==${i} value==${value}`);
+    /**
+     * i==0 value==1     
+     * i==1 value==2     
+     * i==2 value==3
+     */
+})
+
+each1(testObj,(key,value)=>{
+    console.log(`key==${key} value==${value}`);
+    /**
+     * key==0 value==name
+     * key==1 value==age 
+     * key==2 value==se
+     */
+})
+
+/**
+ * 第二版本，实现返回false就中断
+ * @param {Object/Array/} obj 
+ * @param {Function} callback 
+ */
+function each2(obj,callback){
+    let length,i=0;
+    
+    if(isArrayLike(obj)){
+        length = obj.length;
+        for(;i<length;i++){
+            if(callback(i,obj[i]) === false){
+                break;
+            }
+        }
+    }else{
+        for(i in obj){
+            if(callback(i,obj[i]) === false){
+                break;
+            }
+        }
+    }
+}
 
