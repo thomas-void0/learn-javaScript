@@ -112,4 +112,33 @@ function deepEq(a,b){
         case '[object Boolean]':
             return +a === +b;
     }
+
+    //关于构造函数的判断
+    var areArrays = className === '[object Array]';
+    //不是数组
+    if(!areArrays){
+        //过滤掉两个函数的情况
+        if(typeof a != 'object' || typeof b != 'object')return false;
+
+        var aCtor = a.constructor, bCtor=b.constructor;
+        //aCtor和bCtor必须都存在并且都不是Object构造函数的情况下，aCtor不等于bCtor，那这两个对象就真的不相等啦
+        if(aCtor !== bCtor && !(isFunction(aCtor) && aCtor instanceof aCtor && isFunction(bCtor) && bCtor instanceof bCtor)
+            && ('constructor' in a && 'constructor' in b)){
+            return false;
+        }
+    }
+
+    //...
 }
+
+//判断是否为函数
+function isFunction(obj){
+    return toString.call(obj) === '[object Function]';
+}
+
+
+
+
+
+
+
