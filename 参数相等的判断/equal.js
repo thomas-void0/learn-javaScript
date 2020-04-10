@@ -335,5 +335,111 @@ b.foo.b.foo.c.foo = b;
 console.log(eq(a, b)) // true
 
 
+// 自己封装一个检测实例,不含循环嵌套
+/**
+ * @param {Any} a 
+ * @param {Any} b 
+ */
+function equal(a,b){
+    // 首先对基本数据类型和+0,-0做一个判断
+    /*这里可以对相同的基本数据类型和+0，-0做一个过滤。*/
+    if(a === b) return a !== 0 || 1/a === 1/b;
+
+    //判断是否为null,如果为null就退出函数
+    /*到了这一步后，说明a,b两个值不能简单的通过===判断是否相同，那么就再判断他们其中一个是否是null，如果是空就直接返回false*/
+    if(a === null || b === null ) return false;
+
+    //判读是否是NaN
+    /*到这里数据两个数据对比还未完成，那么再看其是否是特殊的NaN，假设a='a',b='NaN'那么条件不满足，程序继续执行。
+    如果a='NaN',b='a'，那么条件满足，直接返回false。假设a，b都是NaN，那么条件满足，直接返回true。
+    */
+    if(a !== a) return b !== b;
+
+    //判断a是否是基本类型，如果是基本类型就返回false
+    /*来到这里后，a肯定不是NaN了。判断a是否是基本的数据类型，如果a是基本数据类型，同时b是函数或者基本数据类型的情况下，直接返回false
+    之所以不写typeof b !== 'function';的原因是因为，基本数据类型不可能和函数类型相同,如果我们写上了typeof b !== 'function'的话。
+    它就会在虽然a是基本数据，b是function的情况下进入到deepEqual函数中去，实际上这是没有意义的对比。
+    而基本数据类型我们是判定和它的包装对象是相同的，所以，如果a，b都不是包装对象的情况下，依旧返回false。
+    */
+    let type = typeof a;
+    if(type !== 'function' && type !== 'object' && typeof b !== 'object') return false;
+
+    //如果以上的条件都无法判断，那么就进入到深层次的判断当中去。
+    /*当a是复杂数据类型或者b是包装对象的时候，进入到深层次的判断当中去*/
+    return deepEqual(a,b);
+}
+
+/**
+ * 深度对比
+ * @param {Any} a 
+ * @param {Any} b 
+ */
+const toString = Object.prototype.toString;
+
+function isFunction(obj){
+    return toString(obj) === '[object Function]';
+}
+
+function deepEqual(a,b){
+    //这里的情况是，a是基本数据类型(除了null和NaN)，b是复杂数据类型（除了function）。
+    // a是复杂数据类型，b是除了null以外的基本数据类型，或者复杂数据类型。
+
+    // 首先对包装对象进行判断处理,如果他们的类型不同，就直接返回false。因为基本数据类型调用toString方法
+    // 和它的包装对象调用toString方法的返回值是一致的。
+    let typea = toString.call(a);
+    let typeb = toString.call(b);
+    if(typea !== typeb) return false;
+
+    // 这里的判断方式是使用的隐式的类型转换。'' + 'str' === '' + new String('str');除了Number类型比较特殊以外
+    switch (typea) {
+        case '[object RegExp]':
+        case '[object String]':
+            return ''+a === '' + b;
+        case '[object Number]':
+            if(+a !== +a) return +b !== +b; //这里是为了判断new Number(NaN)和 new Number(NaN) 
+            return +a === 0 ? 1 / +a === 1 / +b : +a === +b;//这里是为了判断是否是new Number(+/-0)
+        case '[object Boolean]':
+        case '[object Date]':
+            return +a === +b;
+    }
+
+    //如果上面都不满足，那么就进行对构造函数的判断
+    let areArrays = typea === '[object Array]';
+    // 如果不是数组
+    if(!areArrays){
+        //过滤掉2个都是函数的情况
+        if(typeof a !== 'object' || typeof b !== 'object') return false;
+
+        let aCtor = a.constructor; 
+        let bCtor = b.constructor;
+
+        // aCtor 和 bCtor 必须都存在并且都不是 Object 构造函数的情况下，aCtor 不等于 bCtor， 那这两个对象就真的不相等啦 因为Object instanceof Object === true
+        if (aCtor !== bCtor && !(isFunction(aCtor) && aCtor instanceof aCtor && isFunction(bCtor) && bCtor instanceof bCtor) && ('constructor' in a && 'constructor' in b)) {
+            return false;
+        }
+    }
+
+    // 对对象和数组进行判断
+    if(areArrays){
+        length = a.length;
+        if(length !== b.length) return false;
+
+        while(length--){
+            if(!eq(a[length],b[length])) return false;
+        }
+    }else{
+        let keys = Object.keys(a);
+        let key;
+
+        if(Object.keys(b).length !== keys) return false;
+
+        while(length--){
+            key = keys[length];
+            if(!(b.hasOwnProperty(key) && eq(a[key],b[key]))) return false;
+        }
+    }
+
+    return true;
+}
 
 
