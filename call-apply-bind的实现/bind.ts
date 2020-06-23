@@ -10,7 +10,7 @@ Function.prototype.bind = function(context){
     var args = Array.prototype.slice.call(arguments,1);
 
     // 为了防止修改bBound的原型对象导致原函数的原型对象被修改，这里引入一个中间函数进行处理
-    class fNOP{};
+   class fNOP{};
 
     var bBound:Function = function(this:typeof bBound){
         //收集调用的时候传入的参数
@@ -23,3 +23,6 @@ Function.prototype.bind = function(context){
     bBound.prototype = new fNOP();
     return bBound;
 }
+
+
+
