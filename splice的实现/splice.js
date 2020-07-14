@@ -104,5 +104,18 @@ function computeStartIndex(start, len) {
     return start >= len ? len : start;
 }
 //对deleteCount删除个数的处理
-function computeDeleteCount(start) {
+function computeDeleteCount(start, len, deleteCount, argumentsLen) {
+    //如果删除数目没有传，那么默认删除后面的
+    if (argumentsLen === 1) {
+        return len - start;
+    }
+    //删除数目过小
+    if (argumentsLen < 0) {
+        return 0;
+    }
+    //删除数目过大
+    if (deleteCount > len - start) {
+        return len - start;
+    }
+    return deleteCount;
 }

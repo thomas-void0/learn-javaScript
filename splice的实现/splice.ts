@@ -140,6 +140,26 @@ function computeStartIndex(start:number,len:number){
 }
 
 //对deleteCount删除个数的处理
-function computeDeleteCount(start:number,){
+function computeDeleteCount(
+    start:number,
+    len:number,
+    deleteCount:number,
+    argumentsLen:number
+):number{
+    //如果删除数目没有传，那么默认删除后面的
+    if(argumentsLen === 1){
+        return len - start;
+    }
 
+    //删除数目过小
+    if(argumentsLen < 0){
+        return 0;
+    }
+
+    //删除数目过大
+    if(deleteCount > len - start){
+        return len - start;
+    }
+
+    return deleteCount;
 }
