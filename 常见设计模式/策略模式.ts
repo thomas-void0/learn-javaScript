@@ -137,3 +137,112 @@ priceProcessor.newUser = function(originPrice:number){
     }
     return originPrice;
 }
+
+//js设计模式开发实践
+const calculateBonus = function (performancelevel:string,salary:number){
+    if(performancelevel === 'S'){
+        return salary * 4
+    }
+
+    if(performancelevel === "A"){
+        return salary * 3
+    }
+
+    if(performancelevel === "B"){
+        return salary * 2
+    }
+}
+
+//使用组合函数重构代码
+const performanceS = function(salary:number){
+    return salary * 4
+}
+const performanceA = function(salary:number){
+    return salary * 3
+}
+const performanceB = function(salary:number){
+    return salary * 2
+}
+
+const calculateBonus1 = function(performancelevel:string,salary:number){
+    if(performancelevel === "S") return performanceS(salary);
+    if(performancelevel === "A") return performanceA(salary);
+    if(performancelevel === "B") return performanceB(salary);
+}
+
+//使用策略模式重构
+interface interCalculateBonusObj {
+    [propname:string]:(salary:number)=>number
+}
+
+//策略类：封装具体的计算算法，对扩展开发，原则上不能进行修改。
+const calculateBonusObj:interCalculateBonusObj = {
+    performanceS(salary:number){
+        return salary * 4;
+    },
+    performanceA(salary:number){
+        return salary * 3;
+    },
+    performanceB(salary:number){
+        return salary * 2;
+    }
+}
+calculateBonusObj.performanceC = function(salary:number){
+    return salary;
+}
+
+//环境类：负责委托策略类进行具体的算法操作，不可修改
+const calculateBonus2 = function(performancelevel:string,salary:number){
+    return calculateBonusObj[performancelevel](salary)
+}
+
+//策略模式：就是定义一系列算法，将其封装出来。通过组合的方式，使它们可以互相替换。
+
+//示例实现
+const _performanceS:any = function(){};
+_performanceS.prototype.calculate = function(salary:number){
+    return salary * 4;
+}
+
+const _performanceA = function(){}
+_performanceA.prototype.calculate = function(salary:number){
+    return salary * 3;
+}
+
+const _performanceB = function(){}
+_performanceB.prototype.calculate = function(salary:number){
+    return salary * 2;
+}
+
+
+interface interBouns{
+    salary:null | number;
+    strategy:null | {
+        prototype:{
+            calculate:(salary:number)=>number
+        }
+    }
+}
+
+
+const Bouns:any = function(this:interBouns){
+    this.salary = null; 
+    this.strategy = null;
+}
+
+Bouns.prototype.setSalary = function(salary:number){
+   this.salary = salary;
+}
+
+Bouns.prototype.setStrategy = function<T>(strategy:T){
+    this.strategy = strategy;
+}
+
+Bouns.prototype.getBouns = function():number{
+    return this.strategy.calculate(this.salary);
+}
+
+const bouns = new Bouns();
+bouns.setSalary(1000)
+bouns.setStrategy(new _performanceS(bouns.salary))
+console.log(bouns.getBouns())
