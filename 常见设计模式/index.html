@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+        }
+        .box{
+            position: relative;
+            overflow: hidden;
+            width: 100px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            font-size: 14px;
+            color: orange;
+            transition: 2s;
+            box-reflect:below 1px linear-gradient(transparent,#0003);
+        }
+        span{
+            position: absolute;
+            display: block;
+        }
+        @keyframes a1{
+            0%{
+                left: 0;
+            }
+            50%,100%{
+                left: 100%;
+            }
+        }
+
+        @keyframes a2{
+            0%{
+                top: 0;
+            }
+            50%,100%{
+                top: 100%;
+            }
+        }
+        @keyframes a3{
+            0%{
+                right: 0;
+            }
+            50%,100%{
+                right: 100%;
+            }
+        }
+        @keyframes a4{
+            0%{
+                bottom: 0;
+            }
+            50%,100%{
+                bottom: 100%;
+            }
+        }
+        span:nth-child(1){
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg,transparent,orange);
+            animation: a1 0.5s linear infinite;
+        }
+        span:nth-child(2){
+            right: 0;
+            top: -100%;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg,transparent,orange);
+            animation: a2 0.5s linear infinite;
+            animation-delay: 0.125s;
+
+        }
+        span:nth-child(3){
+            right: -100%;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(270deg,transparent,orange);
+            animation: a3 0.5s linear infinite;
+            animation-delay: 0.25s;
+
+        }
+        span:nth-child(4){
+            bottom: -100%;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(360deg,transparent,orange);
+            animation: a4 0.5s linear infinite;
+            animation-delay: 0.275s;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        呵呵
+    </div>
+</body>
+</html>
