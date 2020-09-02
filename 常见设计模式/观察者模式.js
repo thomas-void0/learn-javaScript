@@ -20,3 +20,13 @@ var Observer = /** @class */ (function () {
     Observer.prototype.update = function () { };
     return Observer;
 }());
+//布告板实现，在此处实际上布告板就相当于我们的观察者
+var Board = /** @class */ (function () {
+    function Board() {
+    }
+    Board.prototype.display = function () { console.log("显示相应信息"); };
+    Board.prototype.update = function () {
+        console.log("获取通知信息");
+    };
+    return Board;
+}());
