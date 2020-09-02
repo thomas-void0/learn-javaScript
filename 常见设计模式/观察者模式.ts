@@ -28,3 +28,16 @@ interface O{
 class Observer implements O{
     update(){}
 }
+
+//布告板显示接口
+interface D{
+    display:()=>void
+}
+
+//布告板实现，在此处实际上布告板就相当于我们的观察者
+class Board implements D{
+    display(){console.log("显示相应信息")}
+    update(){
+        console.log("获取通知信息")
+    }
+}
