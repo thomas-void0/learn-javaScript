@@ -213,4 +213,3 @@ Bouns.prototype.getBouns = function () {
 var bouns = new Bouns();
 bouns.setSalary(1000);
 bouns.setStrategy(new _performanceS(bouns.salary));
-console.log(bouns.getBouns());
