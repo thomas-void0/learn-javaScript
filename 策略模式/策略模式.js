@@ -164,7 +164,7 @@ var calculateBonus1 = function (performancelevel, salary) {
     if (performancelevel === "B")
         return performanceB(salary);
 };
-//策略类：封装具体的计算算法，对扩展开发，原则上不能进行修改。
+//策略对象：封装具体的计算算法，对扩展开发，原则上不能进行修改。
 var calculateBonusObj = {
     performanceS: function (salary) {
         return salary * 4;
@@ -213,3 +213,4 @@ Bouns.prototype.getBouns = function () {
 var bouns = new Bouns();
 bouns.setSalary(1000);
 bouns.setStrategy(new _performanceS(bouns.salary));
+console.log(bouns.getBouns());
