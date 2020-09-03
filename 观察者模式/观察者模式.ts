@@ -150,3 +150,98 @@ namespace Weatcher{
 
     new WeatherStation().test()
 }
+
+namespace Product{
+    //定义发布者
+    interface interDep{
+        add:(o:Observer)=>void,
+        remove:(o:Observer)=>void,
+        notify:(state:string)=>void
+    }
+
+    class Dep implements interDep{
+        public ObserverList:Array<Observer>
+        constructor(){
+            this.ObserverList = []
+        }
+        add(o:Observer){
+            this.ObserverList.push(o);
+        }
+        remove(o:Observer){
+            this.ObserverList = this.ObserverList.filter(item=>item != o);
+        }
+        notify(state:string){
+            this.ObserverList.forEach(item=>item.update(state))
+        }
+    }
+
+    interface interObserver{
+        update:(state:string)=>void
+    }
+
+    class Observer implements interObserver{
+        update(state?:string){
+            console.log("通知更新")
+        }
+    }
+
+    //具体实现
+    class PrdPublisher extends Dep{
+        public prdState:null | string;
+        public observers:Array<any>;
+        constructor(){
+            super()
+            // 初始化需求文档
+            this.prdState = null
+            // 韩梅梅还没有拉群，开发群目前为空
+            this.observers = []
+        }
+
+        //该方法用于获取文件信息
+        getPrdState(){
+            return this.prdState
+        }
+
+        //该方法用于设置文件信息
+        setPrdState(state:string){
+            this.prdState = state;
+            this.notify(this.prdState) //调用通知更新
+        }
+    }
+
+    class DeveloperObserver extends Observer{
+        public prdState:null | string; //初始化文件为空
+        constructor(){
+            super()
+            this.prdState = null;
+        }
+
+        update(state?:string){
+            console.log("更新消息")
+            state && (this.prdState = state);
+            //调用工作函数
+            this.work()
+        }
+
+        work(){
+            for(let i =0 ;i<3;i++){
+                console.log("work:",this.prdState)
+            }
+        }
+    }
+
+    // 创建订阅者：
+    const JS = new DeveloperObserver()
+    // 创建订阅者：
+    const JAVA = new DeveloperObserver()
+    //创建发布者
+    const PM = new PrdPublisher()
+    //增加订阅者
+    PM.add(JS);
+    PM.add(JAVA);
+    console.log(PM.getPrdState())
+    PM.setPrdState("哈哈哈哈")
+    //删除订阅者
+    PM.remove(JS)
+    PM.setPrdState("====")
+}

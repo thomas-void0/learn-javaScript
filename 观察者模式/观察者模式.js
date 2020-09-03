@@ -1,5 +1,18 @@
 "use strict";
 //关于气象站的显示设计
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 //实现接口
 var WeatherData = /** @class */ (function () {
     function WeatherData() {
@@ -105,3 +118,85 @@ var Weatcher;
     }());
     new WeatherStation().test();
 })(Weatcher || (Weatcher = {}));
+var Product;
+(function (Product) {
+    var Dep = /** @class */ (function () {
+        function Dep() {
+            this.ObserverList = [];
+        }
+        Dep.prototype.add = function (o) {
+            this.ObserverList.push(o);
+        };
+        Dep.prototype.remove = function (o) {
+            this.ObserverList = this.ObserverList.filter(function (item) { return item != o; });
+        };
+        Dep.prototype.notify = function (state) {
+            this.ObserverList.forEach(function (item) { return item.update(state); });
+        };
+        return Dep;
+    }());
+    var Observer = /** @class */ (function () {
+        function Observer() {
+        }
+        Observer.prototype.update = function (state) {
+            console.log("通知更新");
+        };
+        return Observer;
+    }());
+    //具体实现
+    var PrdPublisher = /** @class */ (function (_super) {
+        __extends(PrdPublisher, _super);
+        function PrdPublisher() {
+            var _this = _super.call(this) || this;
+            // 初始化需求文档
+            _this.prdState = null;
+            // 韩梅梅还没有拉群，开发群目前为空
+            _this.observers = [];
+            return _this;
+        }
+        //该方法用于获取文件信息
+        PrdPublisher.prototype.getPrdState = function () {
+            return this.prdState;
+        };
+        //该方法用于设置文件信息
+        PrdPublisher.prototype.setPrdState = function (state) {
+            this.prdState = state;
+            this.notify(this.prdState); //调用通知更新
+        };
+        return PrdPublisher;
+    }(Dep));
+    var DeveloperObserver = /** @class */ (function (_super) {
+        __extends(DeveloperObserver, _super);
+        function DeveloperObserver() {
+            var _this = _super.call(this) || this;
+            _this.prdState = null;
+            return _this;
+        }
+        DeveloperObserver.prototype.update = function (state) {
+            console.log("更新消息");
+            state && (this.prdState = state);
+            //调用工作函数
+            this.work();
+        };
+        DeveloperObserver.prototype.work = function () {
+            for (var i = 0; i < 3; i++) {
+                console.log("work:", this.prdState);
+            }
+        };
+        return DeveloperObserver;
+    }(Observer));
+    // 创建订阅者：
+    var JS = new DeveloperObserver();
+    // 创建订阅者：
+    var JAVA = new DeveloperObserver();
+    //创建发布者
+    var PM = new PrdPublisher();
+    //增加订阅者
+    PM.add(JS);
+    PM.add(JAVA);
+    console.log(PM.getPrdState());
+    PM.setPrdState("哈哈哈哈");
+    //删除订阅者
+    PM.remove(JS);
+    PM.setPrdState("====");
+})(Product || (Product = {}));
