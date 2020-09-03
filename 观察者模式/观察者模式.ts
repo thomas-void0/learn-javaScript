@@ -239,9 +239,75 @@ namespace Product{
     //增加订阅者
     PM.add(JS);
     PM.add(JAVA);
-    console.log(PM.getPrdState())
-    PM.setPrdState("哈哈哈哈")
     //删除订阅者
     PM.remove(JS)
-    PM.setPrdState("====")
+}
+
+namespace Vue{  
+    interface interData{
+        [propname:string]:any
+    }
+    //模拟Vue中的双向数据绑定
+    function observe(target:interData){
+        Object.keys(target).forEach(key=>{
+            // 这个方法会给目标属性加上‘监听器’
+            defineReactive(target,key,target[key])
+        })
+    }   
+
+    //给目标属性加上监听器
+    function defineReactive(target:interData,key:string,value:any){
+        const dep = new Dep();//相当于给每一个属性值 都绑定一个发布对象
+        //属性值本身也可能是对象，所以需要进行递归遍历绑定
+        if(value instanceof Object) observe(value)
+        //为当前的属性安装监听器
+        Object.defineProperty(target,key,{
+            //可枚举
+            enumerable:true,
+            //不可配置
+            configurable:false,
+            get:function(){
+                dep.addSub(this) //将使用了这个值的实例对象加入到订阅者列表中
+                return value;
+            },
+            //监听器函数
+            set:function(val){
+                dep.notify() //通知所有订阅了该值的实例对象进行更新
+                console.log(`${target}属性的${key}属性从${val}值变成了了${value}`)
+                value = val;
+            }
+        })
+    }
+
+    //定义订阅者类Dep
+    class Dep{
+        public subs:Observer[]
+        constructor(){
+            //初始化订阅队列
+            this.subs = []
+        }
+
+        //增加订阅者
+        addSub(sub:Observer){
+            this.subs.push(sub)
+        }
+
+        //删除订阅者
+        removeSub(sub:Observer){
+            const idx:number = this.subs.indexOf(sub)
+            idx !== -1 && this.subs.splice(idx,1)
+        }
+
+        //通知更新
+        notify(){
+            this.subs.forEach(item=>item.update())
+        }
+    }
+
+    class Observer{
+        update(){
+            console.log("嘿嘿，通知更新了")
+        }
+    }
+    
 }

@@ -194,9 +194,69 @@ var Product;
     //增加订阅者
     PM.add(JS);
     PM.add(JAVA);
-    console.log(PM.getPrdState());
-    PM.setPrdState("哈哈哈哈");
     //删除订阅者
     PM.remove(JS);
-    PM.setPrdState("====");
 })(Product || (Product = {}));
+var Vue;
+(function (Vue) {
+    //模拟Vue中的双向数据绑定
+    function observe(target) {
+        Object.keys(target).forEach(function (key) {
+            // 这个方法会给目标属性加上‘监听器’
+            defineReactive(target, key, target[key]);
+        });
+    }
+    //给目标属性加上监听器
+    function defineReactive(target, key, value) {
+        var dep = new Dep(); //相当于给每一个属性值 都绑定一个发布对象
+        //属性值本身也可能是对象，所以需要进行递归遍历绑定
+        if (value instanceof Object)
+            observe(value);
+        //为当前的属性安装监听器
+        Object.defineProperty(target, key, {
+            //可枚举
+            enumerable: true,
+            //不可配置
+            configurable: false,
+            get: function () {
+                dep.addSub(this); //将使用了这个值的实例对象加入到订阅者列表中
+                return value;
+            },
+            //监听器函数
+            set: function (val) {
+                dep.notify(); //通知所有订阅了该值的实例对象进行更新
+                console.log(target + "\u5C5E\u6027\u7684" + key + "\u5C5E\u6027\u4ECE" + val + "\u503C\u53D8\u6210\u4E86\u4E86" + value);
+                value = val;
+            }
+        });
+    }
+    //定义订阅者类Dep
+    var Dep = /** @class */ (function () {
+        function Dep() {
+            //初始化订阅队列
+            this.subs = [];
+        }
+        //增加订阅者
+        Dep.prototype.addSub = function (sub) {
+            this.subs.push(sub);
+        };
+        //删除订阅者
+        Dep.prototype.removeSub = function (sub) {
+            var idx = this.subs.indexOf(sub);
+            idx !== -1 && this.subs.splice(idx, 1);
+        };
+        //通知更新
+        Dep.prototype.notify = function () {
+            this.subs.forEach(function (item) { return item.update(); });
+        };
+        return Dep;
+    }());
+    var Observer = /** @class */ (function () {
+        function Observer() {
+        }
+        Observer.prototype.update = function () {
+            console.log("嘿嘿，通知更新了");
+        };
+        return Observer;
+    }());
+})(Vue || (Vue = {}));
