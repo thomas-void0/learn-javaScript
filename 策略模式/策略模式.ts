@@ -175,7 +175,7 @@ interface interCalculateBonusObj {
     [propname:string]:(salary:number)=>number
 }
 
-//策略类：封装具体的计算算法，对扩展开发，原则上不能进行修改。
+//策略对象：封装具体的计算算法，对扩展开发，原则上不能进行修改。
 const calculateBonusObj:interCalculateBonusObj = {
     performanceS(salary:number){
         return salary * 4;
@@ -245,5 +245,6 @@ Bouns.prototype.getBouns = function():number{
 const bouns = new Bouns();
 bouns.setSalary(1000)
 bouns.setStrategy(new _performanceS(bouns.salary))
+console.log(bouns.getBouns())
 
 
