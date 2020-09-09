@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>装饰者模式</title>
+</head>
+<body>
+    <button id="button">click me</button>
+    <script>
+        //在原函数之前执行的装饰函数
+        Function.prototype.before =function(decoratorFn){
+            //获取原函数
+            const _slef = this;
+            return function(){
+                decoratorFn.apply(this,arguments)
+                return _slef.apply(this,arguments)
+            }
+        }
+        //在原函数之后执行的装饰函数
+        Function.prototype.after = function(decoratorFn){
+            //获取原函数
+            const _slef = this;
+            return function(){
+                const rev = _slef.apply(this,arguments);
+                decoratorFn.apply(this,arguments)
+                return rev;
+            }
+        }
+
+        //测试 
+        document.getElementById = document.getElementById.before(function(){
+            // alert("before 扩展")
+        })
+
+        const btn = document.getElementById("button")
+        btn.onclick = function(){
+            alert("button")
+        }
+
+        window.onload = function(){
+            alert("111")
+        }
+
+        window.onload = (window.onload || function(){}).after(function(){
+            alert("222")
+        }).after(function(){
+            alert("333")
+        }).after(function(){
+            alert("444")
+        })
+    </script>
+</body>
+</html>

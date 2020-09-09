@@ -152,3 +152,15 @@ var air;
     };
     newPlane.fire();
 })(air || (air = {}));
+var JSDecorator;
+(function (JSDecorator) {
+    window.onload = function (e) {
+        console.log("hahaha");
+    };
+    //不能直接改写onload，否则会导致原本的代码失效，可以使用中间变量的方式去进行处理
+    var _onload = window.onload || function (e) { };
+    window.onload = function (e) {
+        // _onload(e) //@ts-ignore
+        console.log("扩展的方法");
+    };
+})(JSDecorator || (JSDecorator = {}));

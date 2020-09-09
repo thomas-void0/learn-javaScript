@@ -145,3 +145,16 @@ namespace air{
 
     newPlane.fire()
 }
+
+namespace JSDecorator{
+    window.onload = function(e:Event){
+        console.log("hahaha")
+    }
+    //不能直接改写onload，否则会导致原本的代码失效，可以使用中间变量的方式去进行处理
+    const _onload = window.onload || function (e:Event){}
+
+    window.onload = function(e:Event){
+        // _onload(e) //@ts-ignore
+        console.log("扩展的方法")
+    }
+}
