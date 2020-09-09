@@ -95,10 +95,60 @@ var coffe;
     //测试实现
     var testcoffe = new Espresso("this is test coffe");
     //不加调料直接打印出价格
-    console.log(testcoffe.getDescription(), testcoffe.cost());
     //增加调料进行测试
     var d = new Mocha(testcoffe);
     d = new Mocha(testcoffe);
     d = new Soy(testcoffe);
-    console.log(d.getDescription(), d.cost());
 })(coffe || (coffe = {}));
+var air;
+(function (air) {
+    var Plane = /** @class */ (function () {
+        function Plane() {
+        }
+        Plane.prototype.fire = function () {
+            console.log("发射普通的子弹");
+        };
+        return Plane;
+    }());
+    //增加导弹和原子弹的装饰类
+    var MissileDecorator = /** @class */ (function () {
+        function MissileDecorator(plane) {
+            this.plane = plane;
+        }
+        MissileDecorator.prototype.fire = function () {
+            this.plane.fire();
+            console.log("发射导弹");
+        };
+        return MissileDecorator;
+    }());
+    var AtomDecorator = /** @class */ (function () {
+        function AtomDecorator(plane) {
+            this.plane = plane;
+        }
+        AtomDecorator.prototype.fire = function () {
+            this.plane.fire();
+            console.log("发射原子弹");
+        };
+        return AtomDecorator;
+    }());
+    var plane = new Plane();
+    plane = new MissileDecorator(plane);
+    plane = new AtomDecorator(plane);
+    // plane.fire()
+    var newPlane = {
+        fire: function () {
+            console.log("发射普通子弹");
+        }
+    };
+    var f1 = newPlane.fire;
+    newPlane.fire = function () {
+        f1();
+        console.log("发射导弹");
+    };
+    var f2 = newPlane.fire;
+    newPlane.fire = function () {
+        f2();
+        console.log("发射原子弹");
+    };
+    newPlane.fire();
+})(air || (air = {}));

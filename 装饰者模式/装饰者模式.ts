@@ -80,11 +80,68 @@ namespace coffe{
     //测试实现
     const testcoffe = new Espresso("this is test coffe");
     //不加调料直接打印出价格
-    console.log(testcoffe.getDescription(),testcoffe.cost())
 
     //增加调料进行测试
     let d = new Mocha(testcoffe);
     d = new Mocha(testcoffe);
     d = new Soy(testcoffe);
-    console.log(d.getDescription(),d.cost())
+}
+
+namespace air{
+    class Plane{
+        fire(){
+            console.log("发射普通的子弹")
+        }
+    }
+
+    //增加导弹和原子弹的装饰类
+    class MissileDecorator{
+        plane:Plane
+        constructor(plane:Plane){
+            this.plane = plane
+        }
+
+        fire(){
+            this.plane.fire()
+            console.log("发射导弹")
+        }
+    }
+
+    class AtomDecorator{
+        plane:Plane
+        constructor(plane:Plane){
+            this.plane = plane
+        }
+
+        fire(){
+            this.plane.fire()
+            console.log("发射原子弹")
+        }
+    }
+
+    let plane = new Plane()
+    plane = new MissileDecorator(plane)
+    plane = new AtomDecorator(plane)
+
+    // plane.fire()
+
+    let newPlane = {
+        fire:function(){
+            console.log("发射普通子弹")
+        }
+    }
+
+    let f1 = newPlane.fire;
+    newPlane.fire = function(){
+        f1()
+        console.log("发射导弹")
+    }
+
+    let f2 = newPlane.fire;
+    newPlane.fire = function(){
+        f2()
+        console.log("发射原子弹")
+    }
+
+    newPlane.fire()
 }
