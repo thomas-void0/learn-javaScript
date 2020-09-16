@@ -157,4 +157,6 @@ namespace JSDecorator{
         // _onload(e) //@ts-ignore
         console.log("扩展的方法")
     }
+
+
 }

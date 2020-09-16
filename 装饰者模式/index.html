@@ -7,6 +7,7 @@
 </head>
 <body>
     <button id="button">click me</button>
+    <button id="test_">test</button>
     <script>
         //在原函数之前执行的装饰函数
         Function.prototype.before =function(decoratorFn){
@@ -33,22 +34,88 @@
             // alert("before 扩展")
         })
 
-        const btn = document.getElementById("button")
-        btn.onclick = function(){
-            alert("button")
+        // const btn = document.getElementById("button")
+        // btn.onclick = function(){
+        //     alert("button")
+        // }
+
+        // window.onload = function(){
+        //     alert("111")
+        // }
+
+        // window.onload = (window.onload || function(){}).after(function(){
+        //     alert("222")
+        // }).after(function(){
+        //     alert("333")
+        // }).after(function(){
+        //     alert("444")
+        // })
+
+        //埋点案例
+        const _btn =  document.getElementById("test_");
+        console.log("btn==>"._btn)
+       _btn.onclick = function(){
+            console.log("按钮点击")
+            log()
         }
 
-        window.onload = function(){
-            alert("111")
+        function log(){
+            console.log("进行事件上报")
+        }
+        
+        //使用AOP的方式进行改造
+        function after(f1,afterFn){
+            return function(){
+                f1.apply(this,arguments);
+                afterFn.apply(this,arguments)
+            }
         }
 
-        window.onload = (window.onload || function(){}).after(function(){
-            alert("222")
-        }).after(function(){
-            alert("333")
-        }).after(function(){
-            alert("444")
+        _btn.onclick = after(function(){
+            console.log("click")
+        },function(){
+            console.log("log")
         })
+
+        Function.prototype.before = function(fn){
+            const _self = this;
+            return function(){
+                fn.apply(this,arguments);
+                return _self.apply(this,arguments);
+            }
+        }
+
+        let func = function (params){
+            console.log("params==>",params)
+        }
+
+        func = func.before(function(params){
+            params.b = 'heheh'
+        })
+
+        func({a:"haha"})
+
+        //对于ajax请求的操作
+        //将ajax的参数都默认附带上token
+        function ajax(type,url,params){
+            console.log("ajax:",params)
+        }
+
+        //最基础的改造
+        // function ajax(type,url,params){
+        //     params = params || {};
+        //     params.token = "token";
+        // }
+
+        //这种方法的坏处：违背了对修改封闭对原则，而且降低了ajax函数的复用性。
+
+        //使用AOP的方式，可以使得ajax函数更加的纯净
+        var _ajax = ajax.before(function(type,url,params){
+            params = params || {};
+            params.token = "token"
+        })
+
+        _ajax(1,2,{a:123})
     </script>
 </body>
 </html>
