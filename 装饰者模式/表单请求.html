@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" name="" id="username">
+    <input type="password" name="" id="password">
+    <input id="submit" type="button" value="submit">
+
+    <script>
+        const username = document.getElementById("username");
+        const password = document.getElementById("password");
+        const submit = document.getElementById("submit");
+
+        //不使用AOP的情况下
+        // submit.onclick = function(){
+        //     if(username.value === ''){
+        //         return alert("账号不能为空")
+        //     }
+
+        //     if(password.value === ""){
+        //         return alert("密码不能为空")
+        //     }
+
+        //     const params = {
+
+        //     }
+
+        //     console.log("发起请求")
+        // }
+
+        //这样导致了逻辑耦合，应该让验证和提交分开s
+        function valida(){
+            if(username.value === ''){
+                return false
+            }
+
+            if(password.value === ""){
+                return false
+            }
+
+            return true
+        }
+
+        // submit.onclick = function(){
+        //     if(!valida()){
+        //         return alert("验证不通过")
+        //     }
+
+        //     const params = {
+
+        //     }
+
+        //     console.log("发起请求")
+        // }
+
+        //以上并没有实现完全的解耦
+        //使用AOP的方式改造代码
+        Function.prototype.beforeValidata = function(beforeFn){
+            const _self = this;
+            return function(){
+                if(!beforeFn.apply(this,arguments)) return alert("验证不通过")
+                return _self.apply(this,arguments);
+            }
+        }
+
+        function newsubmit(){
+            console.log("tijiao")
+        }
+
+        const _newClick = newsubmit.beforeValidata(valida);
+
+        submit.onclick = _newClick
+
+    </script>
+</body>
+</html>
