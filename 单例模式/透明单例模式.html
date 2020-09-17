@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //实现一个唯一的div
+        var CreateDiv = (function(){
+            var instance;
+
+            var Cd = function(html){
+                if(instance){
+                    return instance;
+                }
+
+                this.html = html;
+                this.init();
+                instance = this;
+                return instance;
+            }
+
+            Cd.prototype.init = function(){
+                var div = document.createElement('div')
+                div.innerHTML = this.html;
+                document.body.appendChild(div)
+            }
+
+            Cd.prototype.getName = function(){
+                console.log(this.html)
+            }
+
+            return Cd;
+        })()
+
+        var a = new CreateDiv('hahahah')
+        var b = new CreateDiv("<h1>hehehehehe</h1>")
+
+        console.log(a === b)
+        a.getName()
+        b.getName()
+
+        //以上的代码违背的单一职责原则
+        
+    </script>
+</body>
+</html>
