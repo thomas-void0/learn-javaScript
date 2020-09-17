@@ -38,12 +38,40 @@
         var a = new CreateDiv('hahahah')
         var b = new CreateDiv("<h1>hehehehehe</h1>")
 
-        console.log(a === b)
-        a.getName()
-        b.getName()
+        // console.log(a === b)
+        // a.getName()
+        // b.getName()
 
         //以上的代码违背的单一职责原则
-        
+        //使用代理实现单例模式
+
+        var CreateDiv_ = function (html){
+            const div = document.createElement('div')
+            div.innerHTML = html;
+            document.body.appendChild(div)
+        }
+
+        CreateDiv_.prototype.getName = function(){
+            console.log(this.html)
+        }
+
+        var proxySingletonCreagteDiv = function(){
+            var instance;
+
+            return function(html){
+                if(instance == void 0){
+                    instance = new CreateDiv_(html);
+                }
+
+                return instance;                
+            }
+        }
+
+        const fn = proxySingletonCreagteDiv()
+        var a = fn("heheheheh")
+        var b = fn("kakaakkak")
+
+        console.log(a === b)
     </script>
 </body>
 </html>
