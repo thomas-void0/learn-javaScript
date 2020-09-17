@@ -158,3 +158,4 @@ namespace JSDecorator{
         console.log("扩展的方法")
     }
 }
+
