@@ -81,3 +81,15 @@ var order;
     var doorTest = new DoorRemoteControl(new ControlGarageDoor(new GarageDoor()));
     doorTest.buttonWasPress();
 })(order || (order = {}));
+var order2;
+(function (order2) {
+    //实现遥控器案例
+    var RemoteControl = /** @class */ (function () {
+        function RemoteControl() {
+            //遥控器要处理7个命令，使用数组记录这些命令
+            this.onCommands = [];
+            this.offCommands = [];
+        }
+        return RemoteControl;
+    }());
+})(order2 || (order2 = {}));

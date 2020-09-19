@@ -92,3 +92,20 @@ namespace order{
     const doorTest = new DoorRemoteControl(new ControlGarageDoor(new GarageDoor()));
     doorTest.buttonWasPress()
 }
+
+
+namespace order2{
+    interface interCommand{
+        execute:()=>void
+    }
+
+    //实现遥控器案例
+    class RemoteControl{
+        //遥控器要处理7个命令，使用数组记录这些命令
+        onCommands:interCommand[] = [];
+        offCommands:interCommand[] = [];
+
+        constructor(){
+        }
+    }
+}
