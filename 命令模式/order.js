@@ -44,4 +44,40 @@ var order;
         return RemoteControlTest;
     }());
     new RemoteControlTest();
+    //实现开门的功能：
+    //实现门的示例对象
+    var GarageDoor = /** @class */ (function () {
+        function GarageDoor() {
+        }
+        GarageDoor.prototype.on = function () {
+            console.log("open the door");
+        };
+        GarageDoor.prototype.off = function () {
+            console.log("close the door");
+        };
+        return GarageDoor;
+    }());
+    // 实现门的命令对象
+    var ControlGarageDoor = /** @class */ (function () {
+        function ControlGarageDoor(door) {
+            this.door = door;
+        }
+        ControlGarageDoor.prototype.execute = function () {
+            this.door.on();
+        };
+        return ControlGarageDoor;
+    }());
+    //实现门的遥控器
+    var DoorRemoteControl = /** @class */ (function () {
+        function DoorRemoteControl(remote) {
+            this.remote = remote;
+        }
+        DoorRemoteControl.prototype.buttonWasPress = function () {
+            this.remote.execute();
+        };
+        return DoorRemoteControl;
+    }());
+    //测试
+    var doorTest = new DoorRemoteControl(new ControlGarageDoor(new GarageDoor()));
+    doorTest.buttonWasPress();
 })(order || (order = {}));

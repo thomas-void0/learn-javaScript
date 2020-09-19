@@ -48,5 +48,47 @@ namespace order{
         }
     }
 
-    new RemoteControlTest()
+    new RemoteControlTest();
+
+
+    //实现开门的功能：
+
+    //实现门的示例对象
+    class GarageDoor {
+        on(){
+            console.log("open the door")
+        }
+        off(){
+            console.log("close the door")
+        }
+    }
+
+    // 实现门的命令对象
+    class ControlGarageDoor implements interCommand{
+        //这里需要将门的实例对象联系起来
+        door:GarageDoor
+        constructor(door:GarageDoor){
+            this.door = door;
+        }
+        execute(){
+            this.door.on()  
+        }
+    }   
+
+    //实现门的遥控器
+    class DoorRemoteControl{
+        //这里需要将命令实例对象联系起来
+        remote:ControlGarageDoor
+        constructor(remote:ControlGarageDoor){
+            this.remote = remote
+        }
+
+        buttonWasPress(){
+            this.remote.execute()
+        }
+    }
+
+    //测试
+    const doorTest = new DoorRemoteControl(new ControlGarageDoor(new GarageDoor()));
+    doorTest.buttonWasPress()
 }
