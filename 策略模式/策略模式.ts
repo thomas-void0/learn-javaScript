@@ -393,3 +393,85 @@ const delegationFunction3 = (tag:string) =>strategyValue[tag]()
 console.log(delegationFunction3('1')) //原文案已开原创标
 console.log(delegationFunction3('2')) //被微信删文
 
+
+// if (data[i].bank_name == '工商银行') {
+//     data[i].bankClass = 'icon-gongshang'
+//   } else if (data[i].bank_name == '中国银行') {
+//     data[i].bankClass = 'icon-zhongguo'
+//   } else if (data[i].bank_name == '农业银行') {
+//     data[i].bankClass = 'icon-nongye'
+//   } else if (data[i].bank_name == '交通银行') {
+//     data[i].bankClass = 'icon-jiaotong'
+//   } else if (data[i].bank_name == '建设银行') {
+//     data[i].bankClass = 'icon-jianshe'
+//   } else if (data[i].bank_name == '兴业银行') {
+//     data[i].bankClass = 'icon-xingye'
+//   } else if (data[i].bank_name == '招商银行') {
+//     data[i].bankClass = 'icon-zhaoshang'
+//   } else if (data[i].bank_name == '浦发银行') {
+//     data[i].bankClass = 'icon-pufa'
+//   } else if (data[i].bank_name == '广发银行') {
+//     data[i].bankClass = 'icon-guangfa'
+//   } else if (data[i].bank_name == '平安银行') {
+//     data[i].bankClass = 'icon-pingan'
+//   } else if (data[i].bank_name == '中信银行') {
+//     data[i].bankClass = 'icon-zhongxin'
+//   } else if (data[i].bank_name == '华夏银行') {
+//     data[i].bankClass = 'icon-huaxia'
+//   } else if (data[i].bank_name == '光大银行') {
+//     data[i].bankClass = 'icon-guangda'
+//   } else if (data[i].bank_name == '民生银行') {
+//     data[i].bankClass = 'icon-minsheng'
+//   } else if (data[i].bank_name == '邮政储蓄银行') {
+//     data[i].bankClass = 'icon-youzheng'
+//   } else if (data[i].bank_name == '宁波银行') {
+//     data[i].bankClass = 'icon-ningbo'
+//   }
+
+
+//新建constant.js文件，放置策略对象配置文件
+export const CONFIG_OBJ:{[propName:string]:string} = {
+    "1":"icon-zhifubao",
+    "工商银行":"icon-gongshang",
+    "中国银行":"icon-zhongguo",
+    "农业银行":"icon-nongye",
+    "交通银行":"icon-jiaotong",
+    "建设银行":"icon-jianshe",
+    "兴业银行":"icon-xingye",
+    "招商银行":"icon-zhaoshang",
+    "浦发银行":"icon-pufa",
+    "广发银行":"icon-guangfa",
+    "平安银行":"icon-pingan",
+    "中信银行":"icon-zhongxin",
+    "华夏银行":"icon-huaxia",
+    "光大银行":"icon-guangda",
+    "民生银行":"icon-minsheng",
+    "邮政储蓄银行":"icon-youzheng",
+    "宁波银行":"icon-ningbo",
+}
+
+
+//index.js
+const _data:string[] = [];
+//新建策略对象
+interface interObj {
+    [propName:string]:()=>string
+}
+const STRATEGY_OBJ = Object.keys(CONFIG_OBJ).reduce((prev:interObj,key)=>{
+    prev[key] = ()=>CONFIG_OBJ[key];
+    return prev;
+},{})
+
+//创建委派函数
+const dF = (name:string)=>STRATEGY_OBJ[name]()
+
+const data1 = [
+    {account_type:"1"},
+    {bank_name:"建设银行"},
+];
+data1.forEach(({account_type,bank_name},i)=>{
+    if(account_type === '1') return _data[i] = dF(account_type);
+    _data[i] = bank_name && dF(bank_name) || ''
+})
+
+console.log("----->",_data)
