@@ -344,19 +344,52 @@ interface Array<T>{
 }
 
 //计算得到tag
-function computedTag (scorce:number){
-    const _keyList = Object.keys(strategyHusa);
-    const _key = _keyList.find((key:string)=>{
-        const _keyList = key.split("-");
-        return scorce > +_keyList[0] && scorce < +_keyList[1]
-    })
-    return _key || "else"
-}
+// function computedTag (scorce:number){
+//     const _keyList = Object.keys(strategyHusa);
+//     const _key = _keyList.find((key:string)=>{
+//         const _keyList = key.split("-");
+//         return scorce > +_keyList[0] && scorce < +_keyList[1]
+//     })
+//     return _key || "else"
+// }
 
 //委托函数
-const delegationFunction2 = (scorce:number) =>{
-    const tag = computedTag(scorce);
-    strategyHusa[tag]()
-}
+// const delegationFunction2 = (scorce:number) =>{
+//     const tag = computedTag(scorce);
+//     strategyHusa[tag]()
+// }
 
-delegationFunction2(5)
+// delegationFunction2(5)
+
+
+//新建一个constant.js文件,用于枚举所有的状态
+export const REASONLIST = [
+    {key:"1",value:"原文案已开原创标"},
+    {key:"2",value:"被微信删文"},
+    {key:"3",value:"账号因该文案被微信屏蔽"},
+    {key:"4",value:"被微信警告自主删文"},
+    {key:"5",value:"微信审核未通过且被删文"},
+    {key:"6",value:"账号被微信屏蔽"},
+    {key:"7",value:"自行删文"},
+    {key:"8",value:"原文链接缺失"},
+    {key:"9",value:"自行添加原文链接"},
+    {key:"10",value:"内容被修改"},
+    {key:"11",value:"发文审核失败"},
+    {key:"12",value:"研判错误"},
+    {key:"13",value:"发错位置"},
+    {key:"14",value:"原文链接为跳转长链"},
+]
+
+
+//index.js
+//创建一个策略对象
+const strategyValue:{[propName:string]:Function} = {}
+REASONLIST.forEach(({key,value})=>strategyValue[key] =()=>value)
+
+//创建委派函数
+const delegationFunction3 = (tag:string) =>strategyValue[tag]()
+
+//测试
+console.log(delegationFunction3('1')) //原文案已开原创标
+console.log(delegationFunction3('2')) //被微信删文
+

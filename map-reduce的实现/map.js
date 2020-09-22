@@ -23,8 +23,8 @@ Array.prototype.map = function (callbackFn, thisArg) {
     for (var k = 0; k < len; k++) {
         //查找数组原型链
         if (k in O) {
-            var value = O[k]; //获取到本次循环的值
-            var mapValue = callbackFn.call(T, value, k, O);
+            var value_1 = O[k]; //获取到本次循环的值
+            var mapValue = callbackFn.call(T, value_1, k, O);
             result.push(mapValue);
         }
     }
