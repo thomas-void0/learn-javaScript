@@ -413,4 +413,3 @@ data1.forEach(function (_a, i) {
         return _data[i] = dF(account_type);
     _data[i] = bank_name && dF(bank_name) || '';
 });
-console.log("----->", _data);

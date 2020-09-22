@@ -473,5 +473,3 @@ data1.forEach(({account_type,bank_name},i)=>{
     if(account_type === '1') return _data[i] = dF(account_type);
     _data[i] = bank_name && dF(bank_name) || ''
 })
-
-console.log("----->",_data)
