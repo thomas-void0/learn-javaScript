@@ -318,6 +318,45 @@ strategyGrade.E = ()=>{
 
 delete strategyGrade.B
 
-console.log(delegationFunction("F")) //我是新增的F状态
-console.log(delegationFunction("E")) //40.5~50.5
-console.log(delegationFunction("B")) // strategyGrade[_tag] is not a function
+// console.log(delegationFunction("F")) //我是新增的F状态
+// console.log(delegationFunction("E")) //40.5~50.5
+// console.log(delegationFunction("B")) // strategyGrade[_tag] is not a function
+
+
+//定义key，在实际开发中，可以专门使用一个js文件放置这个配置参数
+const LESS_THAN_TEN = "0-10"
+//...more params
+const ELSE = "else"
+
+//定义策略对象
+const strategyHusa:{[propname:string]:Function} = {
+    [LESS_THAN_TEN](){
+        console.log("0-10")
+    },
+    //... more function
+    [ELSE](){
+        console.log("没有此情况的处理办法")
+    }
+}
+
+interface Array<T>{
+    find(predicate: (search: T) => boolean) : T;
+}
+
+//计算得到tag
+function computedTag (scorce:number){
+    const _keyList = Object.keys(strategyHusa);
+    const _key = _keyList.find((key:string)=>{
+        const _keyList = key.split("-");
+        return scorce > +_keyList[0] && scorce < +_keyList[1]
+    })
+    return _key || "else"
+}
+
+//委托函数
+const delegationFunction2 = (scorce:number) =>{
+    const tag = computedTag(scorce);
+    strategyHusa[tag]()
+}
+
+delegationFunction2(5)

@@ -12,6 +12,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var _a;
 //飞行类
 var flyBehavior = /** @class */ (function () {
     function flyBehavior() {
@@ -278,6 +279,35 @@ strategyGrade.E = function () {
     return '40.5~50.5';
 };
 delete strategyGrade.B;
-console.log(delegationFunction("F")); //我是新增的F状态
-console.log(delegationFunction("E")); //40.5~50.5
-console.log(delegationFunction("B")); // strategyGrade[_tag] is not a function
+// console.log(delegationFunction("F")) //我是新增的F状态
+// console.log(delegationFunction("E")) //40.5~50.5
+// console.log(delegationFunction("B")) // strategyGrade[_tag] is not a function
+//定义key，在实际开发中，可以专门使用一个js文件放置这个配置参数
+var LESS_THAN_TEN = "0-10";
+//...more params
+var ELSE = "else";
+//定义策略对象
+var strategyHusa = (_a = {},
+    _a[LESS_THAN_TEN] = function () {
+        console.log("0-10");
+    },
+    //... more function
+    _a[ELSE] = function () {
+        console.log("没有此情况的处理办法");
+    },
+    _a);
+//计算得到tag
+function computedTag(scorce) {
+    var _keyList = Object.keys(strategyHusa);
+    var _key = _keyList.find(function (key) {
+        var _keyList = key.split("-");
+        return scorce > +_keyList[0] && scorce < +_keyList[1];
+    });
+    return _key || "else";
+}
+//委托函数
+var delegationFunction2 = function (scorce) {
+    var tag = computedTag(scorce);
+    strategyHusa[tag]();
+};
+delegationFunction2(5);
