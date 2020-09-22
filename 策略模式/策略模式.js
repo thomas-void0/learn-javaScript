@@ -214,3 +214,70 @@ var bouns = new Bouns();
 bouns.setSalary(1000);
 bouns.setStrategy(new _performanceS(bouns.salary));
 console.log(bouns.getBouns());
+//针对评级返回对应的分数
+var grade = function (score) {
+    var _score = score.toUpperCase();
+    if (_score === "S") {
+        return "90~100";
+    }
+    else if (_score === "A") {
+        return "80~90";
+    }
+    else if (_score === "B") {
+        return "70~80";
+    }
+    else if (_score === "C") {
+        return "60~70";
+    }
+    else if (_score === "D") {
+        return "50~60";
+    }
+    else if (_score === "E") {
+        return "40~50";
+    }
+    //... more else if
+    else {
+        return 'else';
+    }
+};
+//新建策略对象，封装算法
+var strategyGrade = {
+    S: function () {
+        return "90~100";
+    },
+    A: function () {
+        return "80~90";
+    },
+    B: function () {
+        return "70~80";
+    },
+    C: function () {
+        return "60~70";
+    },
+    D: function () {
+        return "50~60";
+    },
+    E: function () {
+        return "40~50";
+    }
+    //... more strategy object
+};
+//新建委托函数
+var delegationFunction = function (tag) {
+    var _tag = tag.toUpperCase();
+    return strategyGrade[_tag](); //执行对应的算法
+};
+//产品新增需求了，
+//1，增加一个F状态，
+//2，把之前的E状态修改返回为40.5~50.5，
+//3，删除掉原本的B状态
+strategyGrade.F = function () {
+    return '我是新增的F状态';
+};
+strategyGrade.E = function () {
+    return '40.5~50.5';
+};
+delete strategyGrade.B;
+console.log(delegationFunction("F")); //我是新增的F状态
+console.log(delegationFunction("E")); //40.5~50.5
+console.log(delegationFunction("B")); // strategyGrade[_tag] is not a function
