@@ -72,9 +72,26 @@
         const delCommand = new DelMenuCommand(SubMenu)
 
         //设置命令
-        setCommand(b1,refreshCommand)
+        // setCommand(b1,refreshCommand)
         setCommand(b2,addCommand)
         setCommand(b3,delCommand)
+
+        //使用闭包的方式实现命令模式
+        const _setCommand = function(but,fn){
+            but.onclick = function(){
+                console.log("闭包模式")
+                fn()
+            }
+        }
+
+        const _RefreshMenuBarCommand = function(receiver){
+            return function(){
+                receiver.refresh()
+            }
+        }
+
+        const _refreshCommand = _RefreshMenuBarCommand(MeunBar);
+        _setCommand(b1,_refreshCommand)
     </script>
 </body>
 </html>
