@@ -92,6 +92,25 @@
 
         const _refreshCommand = _RefreshMenuBarCommand(MeunBar);
         _setCommand(b1,_refreshCommand)
+
+        //为了做撤销，可以将方法的执行设置为execute
+        const _RefreshMenuBarCommand2 = function(receiver){
+            return {
+                execute:function(){
+                    receiver.refresh()
+                }
+            }
+        }
+
+        const setCommand2 = function(but,command){
+            but.onclick = function(){
+                command.execute()
+            }
+        }
+
+        const refreshMenuCommand2 = _RefreshMenuBarCommand2(MeunBar);
+        setCommand2(b1,refreshMenuCommand2)
+
     </script>
 </body>
 </html>
