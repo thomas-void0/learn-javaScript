@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="button1">1</button>
+    <button id="button2">2</button>
+    <button id="button3">3</button>
+
+    <script>
+        //界面绘制程序员干的事情
+        const b1 = document.getElementById("button1");
+        const b2 = document.getElementById("button2");
+        const b3 = document.getElementById("button3");
+
+        const setCommand = function(button,command){
+            button.onclick = function(){
+                command.execute()
+            }
+        }
+
+        //逻辑功能程序员干的事情
+
+        //刷新界面菜单
+        const MeunBar = {
+            refresh:function(){
+                console.log("刷新菜单功能")
+            },
+        }
+
+        //增加子菜单
+        const SubMenu = {
+            add:function(){
+                console.log("增加子菜单")
+            },
+            del:function(){
+                console.log("删除子菜单")
+            }
+        }
+
+        //将这些菜单逻辑封装到命令类中去
+        //refresh command
+        const RefreshMenuBarCommand = function(receiver){
+            this.receiver = receiver
+        }
+        RefreshMenuBarCommand.prototype.execute = function(){
+            this.receiver.refresh()
+        }
+
+        //add command
+        const AddMenuCommand = function(receiver){
+            this.receiver = receiver
+        }
+        AddMenuCommand.prototype.execute = function(){
+            this.receiver.add()
+        }
+
+        //del command
+        const DelMenuCommand = function(receiver){
+            this.receiver = receiver
+        }
+        DelMenuCommand.prototype.execute = function(){
+            this.receiver.del()
+        }
+
+        //把对应到命令传入到对应到命令对象中去
+        const refreshCommand = new RefreshMenuBarCommand(MeunBar);
+        const addCommand = new AddMenuCommand(SubMenu)
+        const delCommand = new DelMenuCommand(SubMenu)
+
+        //设置命令
+        setCommand(b1,refreshCommand)
+        setCommand(b2,addCommand)
+        setCommand(b3,delCommand)
+    </script>
+</body>
+</html>
