@@ -154,13 +154,49 @@ var air;
 })(air || (air = {}));
 var JSDecorator;
 (function (JSDecorator) {
-    window.onload = function (e) {
-        console.log("hahaha");
+    // window.onload = function(e:Event){
+    //     console.log("hahaha")
+    // }
+    // //不能直接改写onload，否则会导致原本的代码失效，可以使用中间变量的方式去进行处理
+    // const _onload = window.onload || function (e:Event){}
+    // window.onload = function(e:Event){
+    //     // _onload(e) //@ts-ignore
+    //     console.log("扩展的方法")
+    // }
+    //在先执行a函数，再执行b函数。 或者说先执行b函数，再执行a函数。
+    var fa = function (a, b) {
+        console.log("this is a function", a, b);
     };
-    //不能直接改写onload，否则会导致原本的代码失效，可以使用中间变量的方式去进行处理
-    var _onload = window.onload || function (e) { };
-    window.onload = function (e) {
-        // _onload(e) //@ts-ignore
-        console.log("扩展的方法");
+    var fb = function (a, b) {
+        console.log("this is b function", a, b);
     };
+    //传统的调用方式
+    // fa()
+    // fb()
+    var before = function (f, beforeF) {
+        return function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            beforeF(args);
+            return f(args);
+        };
+    };
+    var after = function (f, afterF) {
+        return function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            var ret = f(args);
+            afterF(args);
+            return ret;
+        };
+    };
+    //调用
+    var _callback = before(fb, fa);
+    // _callback("before1","before2") //this is a function,  this is b function 
+    var _callbackafter = after(fa, fb);
+    _callbackafter();
 })(JSDecorator || (JSDecorator = {}));
