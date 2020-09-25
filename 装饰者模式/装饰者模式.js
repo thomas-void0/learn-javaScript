@@ -165,38 +165,44 @@ var JSDecorator;
     // }
     //在先执行a函数，再执行b函数。 或者说先执行b函数，再执行a函数。
     var fa = function (a, b) {
-        console.log("this is a function", a, b);
+        console.log("a", a, b);
     };
     var fb = function (a, b) {
-        console.log("this is b function", a, b);
+        console.log("b", a, b);
     };
     //传统的调用方式
     // fa()
     // fb()
+    //使用AOP函数进行装饰后
     var before = function (f, beforeF) {
         return function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 args[_i] = arguments[_i];
             }
-            beforeF(args);
-            return f(args);
+            beforeF.apply(void 0, args);
+            return f.apply(void 0, args);
         };
     };
+    //before调用
+    var _callback = before(fb, fa);
+    _callback("before1", "before2");
+    //a before1 before2 
+    //b before1 before2
     var after = function (f, afterF) {
         return function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 args[_i] = arguments[_i];
             }
-            var ret = f(args);
-            afterF(args);
+            var ret = f.apply(void 0, args);
+            afterF.apply(void 0, args);
             return ret;
         };
     };
-    //调用
-    var _callback = before(fb, fa);
-    // _callback("before1","before2") //this is a function,  this is b function 
+    //after调用
     var _callbackafter = after(fa, fb);
     _callbackafter();
+    //a undefined
+    //b undefined
 })(JSDecorator || (JSDecorator = {}));

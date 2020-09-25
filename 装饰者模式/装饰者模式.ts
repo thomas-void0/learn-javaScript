@@ -160,37 +160,44 @@ namespace JSDecorator{
 
     //在先执行a函数，再执行b函数。 或者说先执行b函数，再执行a函数。
     const fa = (a:string,b:string)=>{
-        console.log("this is a function",a,b)
+        console.log("a",a,b)
     }
 
     const fb = (a:string,b:string)=>{
-        console.log("this is b function",a,b)
+        console.log("b",a,b)
     }
 
     //传统的调用方式
     // fa()
     // fb()
 
+    //使用AOP函数进行装饰后
     const before = function(f:Function,beforeF:Function){
-        return (...args:[])=>{
-            beforeF(args)
-            return f(args);
+        return (...args:string[])=>{
+            beforeF(...args)
+            return f(...args);
         }
     }
 
+    //before调用
+    const _callback = before(fb,fa)
+    _callback("before1","before2")  
+    //a before1 before2 
+    //b before1 before2
+        
+
     const after = function(f:Function,afterF:Function){
-        return (...args:[])=>{
-            const ret = f(args);
-            afterF(args);
+        return (...args:string[])=>{
+            const ret = f(...args);
+            afterF(...args);
             return ret;
         }
     }
 
-    //调用
-    const _callback = before(fb,fa)
-    // _callback("before1","before2") //this is a function,  this is b function 
-
+    //after调用
     const _callbackafter = after(fa,fb);
     _callbackafter()
+    //a undefined
+    //b undefined
 
 }
