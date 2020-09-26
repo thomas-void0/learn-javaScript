@@ -200,4 +200,29 @@ namespace JSDecorator{
     //a undefined
     //b undefined
 
+    window.onload = function(){
+        console.log("别人对load方法的监听")
+    }
+
+    //首先对可能覆盖的方法进行缓存
+    const f = window.onload || function(){}
+
+    //使用AOP装饰器
+    const _before = function(f:Function,beforeF:Function){
+        return function(this:any){
+            beforeF.apply(this,arguments)
+            return f.apply(this,arguments);
+        }
+    }
+
+    //增加自己的方法
+    const myF = function(){
+        console.log("这是我新增的方法")
+    }
+
+    //进行装饰
+    const fn = _before(f,myF);
+
+    window.onload = fn;
 }
+

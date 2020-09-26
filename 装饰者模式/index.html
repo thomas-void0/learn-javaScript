@@ -8,6 +8,7 @@
 <body>
     <button id="button">click me</button>
     <button id="test_">test</button>
+    <div style="height:5000px"></div>
     <script>
         //在原函数之前执行的装饰函数
         Function.prototype.before =function(decoratorFn){
@@ -116,6 +117,11 @@
         })
 
         _ajax(1,2,{a:123})
+
+        document.onscroll = function(){
+            console.log("hehehehs")
+        }
     </script>
+    <script src="./装饰者模式.js"></script>
 </body>
 </html>

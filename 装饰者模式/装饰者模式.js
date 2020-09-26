@@ -205,4 +205,23 @@ var JSDecorator;
     _callbackafter();
     //a undefined
     //b undefined
+    window.onload = function () {
+        console.log("别人对load方法的监听");
+    };
+    //首先对可能覆盖的方法进行缓存
+    var f = window.onload || function () { };
+    //使用AOP装饰器
+    var _before = function (f, beforeF) {
+        return function () {
+            beforeF.apply(this, arguments);
+            return f.apply(this, arguments);
+        };
+    };
+    //增加自己的方法
+    var myF = function () {
+        console.log("这是我新增的方法");
+    };
+    //进行装饰
+    var fn = _before(f, myF);
+    window.onload = fn;
 })(JSDecorator || (JSDecorator = {}));
