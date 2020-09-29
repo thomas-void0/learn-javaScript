@@ -74,6 +74,47 @@
         }
         // const _moveCommand = new MoveCommand(new Am(),pos);
 
+        //宏命令
+        const closeDoorCommand = {
+            execute:function(){
+                console.log("关门")
+            }
+        }
+        
+        const openPCcommand = {
+            execute:function(){
+                console.log("开电脑")
+            }
+        }
+
+        const openQQCommand = {
+            execute:function(){
+                console.log("登陆QQ")
+            }
+        }
+
+        //定义宏命令
+        const macroCommand = function() {
+            return {
+                commandsList:[],
+                add:function(command){
+                    this.commandsList.push(command)
+                },
+                execute:function(){
+                    for(let i = 0,command;command = this.commandsList[i++];){
+                        command.execute()
+                    }
+                }
+            }
+        }
+
+        //添加方法
+        const fn = macroCommand()
+        fn.add(closeDoorCommand)
+        fn.add(openPCcommand)
+        fn.add(openQQCommand)
+
+        fn.execute()
     </script>
 </body>
 </html>

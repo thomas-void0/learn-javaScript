@@ -224,5 +224,7 @@ namespace JSDecorator{
     const fn = _before(f,myF);
 
     window.onload = fn;
+    //这是我新增的方法
+    //别人对load方法的监听
 }
 

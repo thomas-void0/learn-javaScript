@@ -62,4 +62,17 @@ var one;
             return result || (result = fn.apply(args));
         };
     };
+    var justOne = function () {
+        var instance;
+        return function (obj) {
+            if (instance == void 0)
+                instance = obj;
+            return instance;
+        };
+    };
+    var fn = justOne();
+    var a = fn({ name: "黄晓明", age: 18 });
+    var b = fn({ name: "安吉拉大宝贝", age: 18 });
+    console.log(a); //{ name: '黄晓明', age: 18 }
+    console.log(b); //{ name: '黄晓明', age: 18 }
 })(one || (one = {}));

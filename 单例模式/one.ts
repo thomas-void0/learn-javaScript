@@ -69,4 +69,26 @@ namespace one{
         }
 
     }
+
+
+    interface interObj{
+        name:string,
+        age:number
+    }
+
+    const justOne = ()=>{
+        let instance:null | interObj
+        return (obj:interObj)=>{
+            if(instance == void 0) instance = obj
+            return instance
+        }
+    }
+
+    const fn = justOne()
+
+    const a = fn({name:"黄晓明",age:18});
+    const b = fn({name:"安吉拉大宝贝",age:18});
+
+    console.log(a) //{ name: '黄晓明', age: 18 }
+    console.log(b) //{ name: '黄晓明', age: 18 }
 }
