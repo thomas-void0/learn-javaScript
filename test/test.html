@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>zh-CN</title>
+</head>
+<body>
+    <script>
+        const currying = function(fn){
+            const args = []
+            return function(){
+                if(arguments.length === 0){
+                    //如果没有传入参数，则执行此刻的函数
+                    return fn.apply(this,args)
+                }
+                [].push.apply(args,arguments);
+                return arguments.callee
+            }
+        }
+
+        //计算价格的函数,使用arguments才能够动态的去加载
+        const money = function(){
+            let m = 0;
+            for(let i=0,len=arguments.length;i<len;i++){
+                m += arguments[i]
+            }  
+            console.log(m)            
+        }
+
+        const mf = currying(money)
+        mf(100)
+        mf(200)
+        mf()
+        
+        //使用call，apply去借用其他对象上的方法，常用arguments去借用Array.prototype上的方法
+        function test(){
+            Array.prototype.push.call(arguments,4)
+            console.log(arguments)
+        }
+        test(1,2,32)
+
+        //uncurrying
+        Function.prototype.uncurrying = function(){
+            const self = this;
+            return function(){
+                const obj = Array.prototype.shift.call(arguments)
+                //区分出需要调用的对象，剩下的arguments即是需要传入的参数值
+                return self.apply(obj,arguments)
+            }
+        }
+
+        //use
+        const push = Array.prototype.push.uncurrying()
+        function test2(){
+            push(arguments,34);
+            console.log(arguments)
+        }
+        test2(1,2,2)
+
+        //use2
+        function bindArrayEvent(){
+            for(let i = 0,fn,ary = ['push','shift','forEach','map'];fn = ary[i++];){
+                Array[fn] = Array.prototype[fn].uncurrying()
+            }
+        }
+        bindArrayEvent()
+        const obj = {
+            length:3,
+            0:1,
+            1:2,
+            2:3
+        }
+        
+        Array.shift(obj)
+        console.log(obj)
+        Array.map(obj,item=>{
+            console.log(item)
+        })
+
+        //分时函数
+        const timeChunk = function(ary,fn,count){
+            var obj,t;
+            const len = ary.length;
+            const start = function(){
+                for(let i = 0;i<Math.min(count || 1,ary.length);i++){
+                    const obj = ary.shift();
+                    fn(obj)
+                }
+            }
+
+            return function(){
+                t = setInterval(() => {
+                    if(ary.length === 9){
+                        return clearInterval(t)
+                    }
+                    start()
+                }, 200);
+            }
+        }
+        //test
+        const _ary = []
+        for(let i = 1;i<=100;i++){
+            _ary.push(i)
+        }
+        const renderDOM = timeChunk(_ary,function(){
+            const div = document.createElement('div')
+            div.innerHTML = Math.random()
+            document.body.appendChild(div)
+        },8)
+
+        renderDOM()
+    </script>
+</body>
+</html>
